@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(
         name='timr',
-        version='0.0.0',
+        version='0.1.0',
         description='Profiling web requests.',
         author='Eric Rochester',
         author_email='erochest@virginia.edu',
