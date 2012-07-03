@@ -26,6 +26,7 @@ setup(
         packages=[
             ],
         scripts=[
+            'timr',
             ],
 
         )
