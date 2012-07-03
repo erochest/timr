@@ -13,6 +13,7 @@ __all__ = [
 
 
 import argparse
+import csv
 import sys
 
 from timrlib import http
@@ -54,6 +55,12 @@ def add_fetch_args(subparser):
             default=4,
             help='The number of times to download the request. Default is 4.',
             )
+    fetch.add_argument(
+            '-o', '--output',
+            dest='output',
+            default='-',
+            help='The file to output to. Default is STDOUT.',
+            )
     fetch.set_defaults(action='fetch')
     return fetch
 
@@ -79,5 +86,7 @@ def main(argv=None):
     argv = argv if argv is not None else sys.argv[1:]
     args = parse_args(argv)
 
-    for finfo in http.do_fetch(args):
-        print(finfo)
+    output = sys.stdout if args.output == '-' else open(args.output, 'ab')
+    with output:
+        writer = csv.writer(output)
+        writer.writerows(http.do_fetch(args))
