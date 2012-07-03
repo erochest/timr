@@ -15,6 +15,8 @@ __all__ = [
 import argparse
 import sys
 
+from timrlib import http
+
 
 def validate_args(ap, args):
     """This checks the options objects and raises errors. """
@@ -76,3 +78,6 @@ def main(argv=None):
     """The main entry point for the timr script."""
     argv = argv if argv is not None else sys.argv[1:]
     args = parse_args(argv)
+
+    for finfo in http.do_fetch(args):
+        print(finfo)

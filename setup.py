@@ -21,6 +21,7 @@ setup(
             ],
 
         requires=[
+            'requests',
             ],
 
         packages=[
