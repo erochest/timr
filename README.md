@@ -9,7 +9,53 @@ a resource. Of course, optimizing anything is difficult without good numbers.
 This script was a way to track the times and generate some semi-useful data
 about them.
 
-## `fetch`
+## Installation
+
+    pip install timr
+
+## Usage
+
+Generally, before you start optimizing your resource, you'll need a baseline:
+
+```bash
+timr fetch -u http://mysite-wow.org -m "initial timing" -n10 -otimings.csv
+```
+
+You'll run something like this a lot. Let's optimize it by pulling the options
+that won't change into a file. We'll call it `fetch.cfg`.
+
+    --url
+    http://mysite-wow.org
+    --times
+    10
+    --output
+    timings.csv
+
+Now we can refer to that file on the command line using a `@` prefix:
+
+```bash
+timr fetch @fetch.cfg -m "initial timing"
+```
+
+From this point on, after making a change, re-run this with a different
+message:
+
+```bash
+timr fetch @fetch.cfg -m "improved caching"
+```
+
+When you want to get an idea of how things are going, run the `report` task:
+
+```bash
+timr report --input timings.csv --output summary.csv
+```
+
+For more information about the fields in these files, see the sections about
+those tasks below.
+
+## Tasks
+
+### `fetch`
 
 ```bash
 $ timr fetch --help
@@ -41,7 +87,7 @@ The output is CSV and has these fields:
 * `size` — The number of characters in the response.
 * `elapsed` — The number of seconds the response took.
 
-## `report`
+### `report`
 
 ```bash
 usage: timr report [-h] [-i INPUT] [-o OUTPUT]
@@ -64,4 +110,12 @@ The output is CSV and has these fields:
 * `max` — The maximum elapsed time for the run.
 * `mean` — The mean elapsed time for the run.
 * `s` — The estimated sample standard deviation from the mean for the run.
+
+## TODOs
+
+* Add the option to run `fetch` in parallel.
+
+## Issues
+
+Please leave them on the [issue tracker](https://github.com/erochest/timr).
 
