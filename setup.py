@@ -9,6 +9,7 @@ setup(
         author='Eric Rochester',
         author_email='erochest@virginia.edu',
         url='https://github.com/erochest/timr',
+        download_url='https://github.com/erochest/timr/tarball/0.1.0',
         license='Apache 2.0',
 
         classifiers=[
