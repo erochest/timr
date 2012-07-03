@@ -13,10 +13,11 @@ __all__ = [
 
 
 import argparse
+from contextlib import nested
 import csv
 import sys
 
-from timrlib import http
+from timrlib import analysis, http
 
 
 def validate_args(ap, args):
@@ -65,6 +66,28 @@ def add_fetch_args(subparser):
     return fetch
 
 
+def add_report_args(subparser):
+    """This adds CLI arguments for the `report` command. """
+    report = subparser.add_parser(
+            'report',
+            help='Print a summary report of a set of timings.',
+            )
+    report.add_argument(
+            '-i', '--input',
+            dest='input',
+            default='-',
+            help='The file containing timings. Default is STDIN.',
+            )
+    report.add_argument(
+            '-o', '--output',
+            dest='output',
+            default='-',
+            help='The file to output to. Default is STDOUT.',
+            )
+    report.set_defaults(action='report')
+    return report
+
+
 def parse_args(argv):
     """Parse a list of command-line arguments into an object. """
     ap = argparse.ArgumentParser(
@@ -74,6 +97,7 @@ def parse_args(argv):
     subs = ap.add_subparsers()
 
     add_fetch_args(subs)
+    add_report_args(subs)
 
     args = ap.parse_args()
     validate_args(ap, args)
@@ -86,7 +110,16 @@ def main(argv=None):
     argv = argv if argv is not None else sys.argv[1:]
     args = parse_args(argv)
 
-    output = sys.stdout if args.output == '-' else open(args.output, 'ab')
-    with output:
-        writer = csv.writer(output)
-        writer.writerows(http.do_fetch(args))
+    if args.action == 'fetch':
+        output = sys.stdout if args.output == '-' else open(args.output, 'ab')
+        with output:
+            writer = csv.writer(output)
+            writer.writerows(http.do_fetch(args))
+
+    elif args.action == 'report':
+        inp = sys.stdin if args.input == '-' else open(args.input, 'rb')
+        output = sys.stdout if args.output == '-' else open(args.output, 'ab')
+        with nested(inp, output):
+            reader = csv.reader(inp)
+            writer = csv.writer(output)
+            writer.writerows(analysis.do_report(http.read_timings(reader)))

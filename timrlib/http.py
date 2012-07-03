@@ -7,6 +7,7 @@ This handles downloading resources.
 __all__ = [
         'FetchInfo',
         'do_fetch',
+        'read_timings',
         ]
 
 
@@ -62,3 +63,14 @@ def do_fetch(opts):
         return FetchInfo(now, sid, msg, sha, len(result.text), elapsed)
 
     return [process(url) for url in url_seq]
+
+
+def read_timings(seq):
+    """Converst an iter of strings to FetchInfos. """
+    for item in seq:
+        fi = FetchInfo._make(item)
+        yield fi._replace(
+                time=datetime.strptime(fi.time, '%Y-%m-%d %H:%M:%S.%f'),
+                size=int(fi.size),
+                elapsed=float(fi.elapsed),
+                )
