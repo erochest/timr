@@ -24,6 +24,9 @@ setup(
             ],
 
         packages=[
+            'timrlib',
+            ],
+        py_modules=[
             ],
         scripts=[
             'timr',

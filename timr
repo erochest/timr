@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
 
+from timrlib.cli import main
+
+
 import argparse
 import csv
 import datetime
@@ -61,7 +64,7 @@ def process_urls(n, msg, *urls):
             yield (url, now, elapsed, size, hash, msg)
 
 
-def main(argv=None):
+def _main(argv=None):
     args = parse_args(argv)
 
     writer = csv.writer(sys.stdout)
