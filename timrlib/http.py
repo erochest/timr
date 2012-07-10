@@ -49,6 +49,17 @@ def sha_skip(_):
     return None
 
 
+def split_header(header):
+    """This splits the header for creating the dict. """
+    return tuple(h.strip() for h in header.split(':'))
+
+
+def make_header_dict(header_seq):
+    """This takes a list of header strings and creates a dict. """
+    header_seq = '' if header_seq is None else header_seq
+    return dict(split_header(h) for h in header_seq)
+
+
 def do_fetch(opts):
     """This takes options and downloads the URL N times. """
     session_id = uuid.uuid1()
@@ -57,8 +68,11 @@ def do_fetch(opts):
     url_seq = itertools.repeat(opts.url, opts.n)
     sha_fn = sha_result if opts.use_sha else sha_skip
 
+    download = requests.get if opts.method.lower() == 'get' else requests.post
+    headers = make_header_dict(opts.header)
+
     def process(url, now=now, sid=session_id, msg=opts.message):
-        (elapsed, result) = time_call(requests.get, url)
+        (elapsed, result) = time_call(download, url, headers=headers)
         sha = sha_fn(result)
         return FetchInfo(now, sid, msg, sha, len(result.text), elapsed)
 

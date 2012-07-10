@@ -31,10 +31,22 @@ def add_fetch_args(subparser):
             help='Download a URL and store the timings.',
             )
     fetch.add_argument(
+            '-M', '--method',
+            dest='method',
+            default='get',
+            help='The HTTP method to use. Default is "get".',
+            )
+    fetch.add_argument(
             '-u', '--url',
             dest='url',
             required=True,
             help='The URL to test.',
+            )
+    fetch.add_argument(
+            '-H', '--header',
+            action='append',
+            dest='header',
+            help='A header tag to include.',
             )
     fetch.add_argument(
             '-m', '--message',
