@@ -26,6 +26,10 @@ that won't change into a file. We'll call it `fetch.cfg`.
 
     --url
     http://mysite-wow.org
+    --data
+    name=Eric
+    --data
+    age=42
     --times
     10
     --output
@@ -60,11 +64,19 @@ those tasks below.
 ```bash
 $ timr fetch --help
 
-usage: timr fetch [-h] -u URL [-m MESSAGE] [-S] [-n N] [-o OUTPUT]
+usage: timr fetch [-h] [-M METHOD] -u URL [-H HEADER] [-d DATA] [-m MESSAGE]
+                  [-S] [-n N] [-o OUTPUT]
 
 optional arguments:
   -h, --help            show this help message and exit
+  -M METHOD, --method METHOD
+                        The HTTP method to use. Default is "get".
   -u URL, --url URL     The URL to test.
+  -H HEADER, --header HEADER
+                        A header tag to include.
+  -d DATA, --data DATA  Key-value pairs to encode as POST data. You can
+                        specify this more than once. Including this implies
+                        -MPOST.
   -m MESSAGE, --message MESSAGE
                         A message for this run.
   -S, --no-sha          Don't use SHA hashing to test the request response.
