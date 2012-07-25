@@ -13,6 +13,7 @@ __all__ = [
 
 from collections import namedtuple
 from datetime import datetime
+from functools import partial
 import hashlib
 import itertools
 import time
@@ -69,6 +70,7 @@ def do_fetch(opts):
     sha_fn = sha_result if opts.use_sha else sha_skip
 
     download = requests.get if opts.method.lower() == 'get' else requests.post
+    download = partial(download, data=opts.data) if opts.data else download
     headers = make_header_dict(opts.header)
 
     def process(url, now=now, sid=session_id, msg=opts.message):
