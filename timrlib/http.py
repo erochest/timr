@@ -69,7 +69,10 @@ def do_fetch(opts):
     url_seq = itertools.repeat(opts.url, opts.n)
     sha_fn = sha_result if opts.use_sha else sha_skip
 
-    download = requests.get if opts.method.lower() == 'get' else requests.post
+    if opts.method.lower() == 'get' and not opts.data:
+        download = requests.get
+    else:
+        download = requests.post
     download = partial(download, data=opts.data) if opts.data else download
     headers = make_header_dict(opts.header)
 
