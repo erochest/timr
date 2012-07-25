@@ -20,6 +20,9 @@ import sys
 from timrlib import analysis, http
 
 
+DATA_SEP = '='
+
+
 def validate_args(ap, args):
     """This checks the options objects and raises errors. """
 
@@ -47,6 +50,13 @@ def add_fetch_args(subparser):
             action='append',
             dest='header',
             help='A header tag to include.',
+            )
+    fetch.add_argument(
+            '-d', '--data',
+            action='append',
+            dest='data',
+            help='Key-value pairs to encode as POST data. You can specify '
+                 'this more than once. Including this implies -MPOST.'
             )
     fetch.add_argument(
             '-m', '--message',
@@ -123,6 +133,8 @@ def main(argv=None):
     args = parse_args(argv)
 
     if args.action == 'fetch':
+        if args.data:
+            args.data = dict(pair.split(DATA_SEP, 1) for pair in args.data)
         output = sys.stdout if args.output == '-' else open(args.output, 'ab')
         with output:
             writer = csv.writer(output)
